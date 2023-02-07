@@ -1,0 +1,27 @@
+{
+  "name": "pruebalacap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fedeavalos78/PruebaLaCap.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fedeavalos78/PruebaLaCap/issues"
+  },
+  "homepage": "https://github.com/fedeavalos78/PruebaLaCap#readme",
+  "dependencies": {
+    "csv-writer": "^1.6.0",
+    "express": "^4.18.2",
+    "jsdom": "^21.1.0",
+    "puppeteer": "^19.6.3",
+    "xlsx": "^0.18.5"
+  }
+}
