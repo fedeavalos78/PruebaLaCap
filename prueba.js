@@ -40,7 +40,7 @@ const urlNotas = [];
       const { window: { document } } = new jsdom.JSDOM(body);
 
       // Seleccionamos los links y los agregamos al arreglo de los enlaces
-      document.querySelectorAll("a[href]")
+      document.querySelectorAll("a[href].cover-link")
         .forEach(element => urlNotas.push(element.href));
     }
 
