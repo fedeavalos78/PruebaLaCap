@@ -24,5 +24,8 @@
     "jsdom": "^21.1.0",
     "puppeteer": "^19.6.3",
     "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1"
   }
 }

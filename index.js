@@ -1,13 +1,3 @@
-// PONER TODOS LOS LINKS EN EL ARREGLO paginas
-
-// ARMAR UN FOR PARA QUE ENTRE A CADA POSICIÓN DE paginas Y OBTENGA EL URL DE CADA NOTA DENTRO DE ESA 
-//PÁGINA, GUARDANDO EL URL EN EL ARREGLO notas
-
-// dECIRLE QUE ENTRE A CADA POSICIÓN DE notas BUSQUE LOS CAMPOS NECESARIOS Y LOS PONGA EN EL OBJETO info 
-//QUE SEA PUSHEADO EN EL ARREGLO infoPorNota
-
-//ESCRIBIR UN ARCHIVO CON EL ARRELGO
-
 // Llamamos a las extensiones necesarias
 const puppeteer = require('puppeteer');
 const jsdom = require('jsdom');
@@ -16,13 +6,33 @@ const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 // Conseguimos todos los links de las paginas de CIUDAD hasta 2019
 const baseUrl = "https://www.lacapital.com.ar/secciones/laciudad.html/";
 const numbers = Array.from({length: 550 + 1}, (_, i) => i);
-let paginasCiudad = []
 
+// En vez de tirarlos x consola, tengo que meterlo en 
+//¿UN ARCHIVO y que la asicronica vaya accediendo a cada link, 
+//o UNA VARIABLE de a uno y que esa sea la variable que escrapee la funcion asincrónica
 for (const number of numbers) {
-  paginasCiudad.push(baseUrl + number);
+  console.log(baseUrl + number);
 }
-
-console.log (paginasCiudad)
+/* 
+<article class="big-entry-box exclusive-entry ">       
+<div class="exclusive-icon">
+    <svg width="10.667" height="10.667" viewBox="0 0 10.667 10.667">
+        <path d="M5.333,0,6.72,3.89l3.947.185L7.577,6.663l1.053,4-3.3-2.29-3.3,2.29,1.053-4L0,4.074,3.947,3.89Z" fill="#eca050"></path>
+    </svg>
+</div>
+        <div class="entry-data">
+            <h2 class="entry-title">Compras municipales: cómo se repartieron $7.200 millones en 2022</h2>
+            <p class="bajada">Un análisis de los expedientes vinculados a compras y licitaciones municipales durante el año que acaba de finalizar. El listado de las empresas ganadoras</p>
+        </div>    
+        <picture>
+            <img src="https://www.lacapital.com.ar/css-custom/203/lazy.svg" data-td-src-property="https://media.lacapital.com.ar/p/efa67abb9055158e2cdcdaf389b96b6d/adjuntos/203/imagenes/100/257/0100257401/514x288/smart/licitacionesrosariojpg.jpg" alt="Compras municipales: cómo se repartieron $7.200 millones en 2022">
+            
+    <p class="entry-autor">Por <span class="font-700">Juan Chiummiento</span></p>
+        </picture>
+      
+        <a href="https://www.lacapital.com.ar/suscriptores/compras-municipales-como-se-repartieron-7200-millones-2022-n10039607.html" class="cover-link" target="" title="Compras municipales: cómo se repartieron $7.200 millones en 2022"></a>
+</article>
+*/
 
 (async () => {
   try {

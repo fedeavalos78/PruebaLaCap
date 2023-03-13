@@ -76,3 +76,13 @@ for (let link of links) {
 
 // guarda el resultado en un archivo xlsx
 // xlsx.write.xlsx2(LaCapital, "LaCapital_rvest.xlsx");
+
+// PONER TODOS LOS LINKS EN EL ARREGLO paginas
+
+// ARMAR UN FOR PARA QUE ENTRE A CADA POSICIÓN DE paginas Y OBTENGA EL URL DE CADA NOTA DENTRO DE ESA 
+//PÁGINA, GUARDANDO EL URL EN EL ARREGLO notas
+
+// dECIRLE QUE ENTRE A CADA POSICIÓN DE notas BUSQUE LOS CAMPOS NECESARIOS Y LOS PONGA EN EL OBJETO info 
+//QUE SEA PUSHEADO EN EL ARREGLO infoPorNota
+
+//ESCRIBIR UN ARCHIVO CON EL ARRELGO

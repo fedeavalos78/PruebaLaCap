@@ -12,6 +12,7 @@
 const puppeteer = require('puppeteer');
 const jsdom = require('jsdom');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
+const { writeFileSync } = require('fs');
 
 // Conseguimos todos los links de las paginas de CIUDAD hasta 2019
 const baseUrl = "https://www.lacapital.com.ar/secciones/laciudad.html/";
@@ -63,3 +64,45 @@ const urlNotas = [];
 
 })();
 
+// Levantar info de cada link
+let laCapital = [];
+
+Promise.all(urlNotas.map(async url => {(async () =>{
+  const browser1 = await puppeteer.launch();
+  const page1 = await browser1.newPage();
+
+  console.log(urlNotas)
+  console.log("pos2");
+
+  for (let url of urlNotas) {
+    try {
+      await page1.goto(url, { waitUntil: 'domcontentloaded' });
+
+      let newData = await page1.evaluate(() => {
+        const fecha = document.querySelector('span.nota-fecha').textContent;
+        const titulo = document.querySelector('h1.nota-title').textContent;
+        const bajada = document.querySelector('div.nota-bajada').textContent;
+        const nota = Array.from(document.querySelectorAll('div.article-body p')).map(p => p.textContent).join('\n');
+        const imagen = document.querySelector('picture.preview-img > div.extra-holder > img').getAttribute('src');
+        const seccion = document.querySelector('div.breadcrumbs.flex-container.align-center').textContent;
+        const seccion2 = '';
+        const tags = document.querySelector('div.tags-container.flex-container.flex-wrap').textContent;
+        const link = window.location.href;
+        const link2 = '';
+        const fuente = 'La Capital';
+
+        return { fecha, titulo, bajada, nota, imagen, seccion, seccion2, tags, link, link2, fuente };
+      });
+
+      laCapital.push(newData);
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+  await browser1.close();
+
+})()
+}));
+console.log(urlNotas)
+console.log(laCapital)
