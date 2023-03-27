@@ -1,18 +1,9 @@
-// PONER TODOS LOS LINKS EN EL ARREGLO paginas
-
-// ARMAR UN FOR PARA QUE ENTRE A CADA POSICIÓN DE paginas Y OBTENGA EL URL DE CADA NOTA DENTRO DE ESA 
-//PÁGINA, GUARDANDO EL URL EN EL ARREGLO notas
-
-// dECIRLE QUE ENTRE A CADA POSICIÓN DE notas BUSQUE LOS CAMPOS NECESARIOS Y LOS PONGA EN EL OBJETO info 
-//QUE SEA PUSHEADO EN EL ARREGLO infoPorNota
-
-//ESCRIBIR UN ARCHIVO CON EL ARRELGO
-
 // Llamamos a las extensiones necesarias
 const puppeteer = require('puppeteer');
 const jsdom = require('jsdom');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 const { writeFileSync } = require('fs');
+/*
 
 // Conseguimos todos los links de las paginas de CIUDAD hasta 2019
 const baseUrl = "https://www.lacapital.com.ar/secciones/laciudad.html/";
@@ -62,17 +53,25 @@ obtenerEnlaces().then((urlNotas) => {
     }).catch((error) => {
     console.error(error);
 });
+*/
 
-let laCapital = [];
-    Promise.all(urlNotas.map(async url => {(async () =>{
-      const browser1 = await puppeteer.launch();
-      const page1 = await browser1.newPage();
+const urls =["https://www.lacapital.com.ar/la-ciudad/vecinos-denuncian-que-los-cuidacoches-les-cobran-1500-estacionar-la-calle-n10054172.html", "https://www.lacapital.com.ar/la-ciudad/el-tiempo-rosario-la-ultima-semana-marzo-arranca-pronosticos-inestabilidad-n10054224.html"];
+
+(async () => {
+    const browser = await puppeteer.launch({
+        timeout: 60000 // 60 seconds
+      });
+    const page = await browser.newPage();
+  
+    try {
+      const laCapital = [];
+      //const urls = await obtenerEnlaces();
     
-          for (let url of urlNotas) {
+      for (let url of urls) {
         try {
-          await page1.goto(url, { waitUntil: 'domcontentloaded' });
+          await page.goto(url, { waitUntil: 'domcontentloaded' });
     
-          let newData = await page1.evaluate(() => {
+          let newData = await page.evaluate(() => {
             const fecha = document.querySelector('span.nota-fecha').textContent;
             const titulo = document.querySelector('h1.nota-title').textContent;
             const bajada = document.querySelector('div.nota-bajada').textContent;
@@ -85,17 +84,67 @@ let laCapital = [];
             const link2 = '';
             const fuente = 'La Capital';
     
-            return { fecha, titulo, bajada, nota, imagen, seccion, seccion2, tags, link, link2, fuente };
+            return {Fecha: fecha, Título: titulo, Bajada: bajada, Nota: nota, Imagen: imagen, Sección: seccion, "Sección 2": seccion2, Tags: tags, Link: link, 'Link 2': link2, Fuente: fuente}
           });
     
-          laCapital.push(newData);
+          laCapital.push((newData => ({
+            fecha: nota.fecha,
+            titulo: nota.titulo,
+            bajada: nota.bajada,
+            nota: nota.nota,
+            imagen: nota.imagen,
+            seccion: nota.seccion,
+            seccion2: nota.seccion2,
+            tags: nota.tags,
+            link: nota.link,
+            link2: nota.link2,
+            fuente: nota.fuente
+        })));
         } catch (error) {
           console.log(error);
         }
-    
       }
-      await browser1.close();
+    
+      const csvWriter = createCsvWriter({
+        path: 'notas.csv',
+        header: [
+          {id: 'fecha', title: 'Fecha'},
+          {id: 'titulo', title: 'Título'},
+          {id: 'bajada', title: 'Bajada'},
+          {id: 'nota', title: 'Nota'},
+          {id: 'imagen', title: 'Imagen'},
+          {id: 'seccion', title: 'Sección'},
+          {id: 'seccion2', title: 'Sección 2'},
+          {id: 'tags', title: 'Tags'},
+          {id: 'link', title: 'Link'},
+          {id: 'link2', title: 'Link 2'},
+          {id: 'fuente', title: 'Fuente'}
+        ]
+      });
+    
+      await csvWriter.writeRecords(laCapital.map(nota => ({
+        fecha: nota.fecha,
+        titulo: nota.titulo,
+        bajada: nota.bajada,
+        nota: nota.nota,
+        imagen: nota.imagen,
+        seccion: nota.seccion,
+        seccion2: nota.seccion2,
+        tags: nota.tags,
+        link: nota.link,
+        link2: nota.link2,
+        fuente: nota.fuente
+    })));
       console.log(laCapital)
-     
-    })()
-    }));
+      console.log(`Se han guardado las notas en un archivo .csv llamado "notas.csv"`);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      await browser.close();
+    }
+
+    
+  })();
+  
+   
+
