@@ -15,12 +15,12 @@ console.log("posPag");
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     const urls = [];
-    var links = [];
     for (let pagina of paginasCiudad) {    
         await page.goto(pagina);
         const enlaces = await page.evaluate(() => {
             const elements = document.querySelectorAll('article.big-entry-box a.cover-link, article.standard-entry-box a.cover-link, article.medium-entry a.cover-link');
-            
+            var links = [];
+
             for (let element of elements) {
                 links.push(element.href);
             }
@@ -33,7 +33,16 @@ console.log("posPag");
         
     }
     //await browser.close();  
-    console.log(urls);
+    const csvWriter = createCsvWriter({
+        path: 'links.csv',
+        header: [
+          {id: 'link', title: 'Link'}
+        ]
+      });
+    csvWriter.writeRecords(urls.map(link => ({link})))
+        .then(() => console.log('Los links se han guardado en un archivo .csv llamado "links.csv"'))
+    
+        console.log(urls);
 
     try {
         const csvWriter = createCsvWriter({
@@ -45,19 +54,17 @@ console.log("posPag");
                 {id: 'nota', title: 'Nota'},
                 {id: 'imagen', title: 'Imagen'},
                 {id: 'seccion', title: 'Sección'},
-                {id: 'seccion2', title: 'Sección2'},
                 {id: 'tags', title: 'Tags'},
                 {id: 'link', title: 'Link'},
                 {id: 'fuente', title: 'Fuente'}
             ]
         });
-        const laCapital = [];
-                
+        var laCapital = [];
         for (let url of urls) {
             try {
                 const newData = {}; // objeto vacío
   
-                await page.goto(url, { waitUntil: 'load', timeout: 60000 });
+                await page.goto(url, { waitUntil: 'load' });
       
                 newData.fecha = await page.$eval('span.nota-fecha', el => el.textContent);
                 newData.titulo = await page.$eval('h1.nota-title', el => el.textContent);
@@ -74,13 +81,13 @@ console.log("posPag");
                 laCapital.push(newData)
         
                 await csvWriter.writeRecords(laCapital);
-                console.log(newData);
+                //console.log(newData);
                 console.log(`Se ha guardado la nota en un archivo .csv llamado "notas.csv"AA`);
                 } catch (error) {
                 console.log(error);
                 }
             }
-            console.log(laCapital)
+            //console.log(laCapital)
             console.log(`Se han guardado todas las notas en un archivo .csv llamado "notas.csv"BB`);
         } catch (error) {
         console.error(error);
