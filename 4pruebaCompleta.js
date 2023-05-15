@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const createCsvWriter = require('csv-writer').createObjectCsvWriter;
 
 const baseUrl = "https://www.lacapital.com.ar/secciones/laciudad.html/";
-const numbers = Array.from({length: 545 + 1}, (_, i) => 33 + i);
+const numbers = Array.from({length: 545 - 33 + 1}, (_, i) => 33 + i);
 const paginasCiudad = [];
 
 for (const number of numbers) {
